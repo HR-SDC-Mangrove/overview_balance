@@ -1,0 +1,25 @@
+{
+  "name": "overview_balance",
+  "version": "1.0.0",
+  "description": "simple custom load balancer for overview component",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HR-SDC-Mangrove/overview_balance.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HR-SDC-Mangrove/overview_balance/issues"
+  },
+  "homepage": "https://github.com/HR-SDC-Mangrove/overview_balance#readme",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.13"
+  }
+}
