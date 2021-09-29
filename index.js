@@ -7,7 +7,7 @@ const port = 8000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static('public'));
 app.get('/:id', (req, res) => {
   const id = req.url.split('=')[1];
   const alternate = async ()=> {
@@ -16,7 +16,6 @@ app.get('/:id', (req, res) => {
       return new Promise((resolve, reject) => {
         axios.get(URL.service1 + attachment + id)
           .then((service1Response) => {
-            console.log('received from server 1, resolving now')
             resolve(service1Response.data)
           }).catch((err) => {console.log(err)})
       }).catch((err) => console.log(err))
