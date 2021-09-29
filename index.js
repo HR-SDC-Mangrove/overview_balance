@@ -5,55 +5,31 @@ const axios = require('axios');
 const URL = require('./config');
 const attachment = 'id='
 
+const servers = [
+  URL.loader1,
+  URL.loader2,
+]
+
+console.log(servers[1])
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-let counter = 0;
-app.get('/:id', (req, res) => {
+let current = 0
+const request = async (req, res) => {
   const id = req.url.split('=')[1];
-  counter += 1;
-  // send to different load balancer based on count
-  const alternate = async () => {
-    if (counter === 1) {
-      console.log('sending to loader 1')
-      return new Promise((resolve, reject) => {
-        axios.get(URL.loader1 + id)
-          .then((loader1Data) => {
-            resolve(loader1Data.data);
-          })
-          .catch((err) => console.log(err))
-      }).catch((err) => console.log(err))
+  if (id) {
+    const server = servers[current];
+    current === (servers.length - 1) ? current = 0 : current++
+    console.log(current)
+    try {
+      const response = await axios.get(server + id)
+      res.send(response.data)
     }
-    if (counter === 2) {
-      console.log('sending to loader 2')
-      return new Promise((resolve, reject) => {
-        // axios.get(URL.loader2 + attachment + id)
-        // .then((data) => {
-          resolve('send two here')
-
-        // })
-        // .catch((err) => console.log(err))
-      }).catch((err) => console.log(err))
-    }
-    // send/reset count on 3
-    if (counter === 3) {
-      counter = 0;
-      console.log('sending to loader 3 and reseting the count', counter)
-      return new Promise((resolve, reject) => {
-        // axios.get(URL.loader3 + attachment + id)
-        // .then((data) => {
-        resolve('send three here')
-        // })
-        // .catch((err) => console.log(err))
-      }).catch((err) => console.log(err))
-
+    catch(err){
     }
   }
-  alternate().then((response) => {
-    console.log('sending response')
-    res.send(response)
-  })
-});
+}
+app.get('/:id', request)
 app.listen(port, () => {
   console.log(`main load balance listening on ${port}`)
 });
